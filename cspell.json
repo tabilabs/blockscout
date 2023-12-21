@@ -546,7 +546,10 @@
         "meer",
         "DefiLlama",
         "SOLIDITYSCAN",
-        "fkey"
+        "fkey",
+        "getcontractcreation",
+        "contractaddresses",
+        "tokennfttx"
     ],
     "enableFiletypes": [
         "dotenv",
