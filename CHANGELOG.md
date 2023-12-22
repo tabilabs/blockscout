@@ -4,6 +4,8 @@
 
 ### Features
 
+- [#9044](https://github.com/blockscout/blockscout/pull/9044) - Expand gas price oracle functionality
+
 ### Fixes
 
 ### Chore
