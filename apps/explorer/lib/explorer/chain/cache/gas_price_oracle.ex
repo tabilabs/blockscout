@@ -33,7 +33,8 @@ defmodule Explorer.Chain.Cache.GasPriceOracle do
     callback: &async_task_on_deletion(&1)
 
   @doc """
-  Get `safelow`, `average` and `fast` percentile of transactions gas prices among the last `num_of_blocks` blocks
+  Calculates the `slow`, `average`, and `fast` gas price and time percentiles from the last `num_of_blocks` blocks and estimates the fiat price for each percentile.
+  These percentiles correspond to the likelihood of a transaction being picked up by miners depending on the fee offered.
   """
   @spec get_average_gas_price(pos_integer(), pos_integer(), pos_integer(), pos_integer()) ::
           {{:error, any} | {:ok, %{slow: gas_price, average: gas_price, fast: gas_price}},
@@ -199,21 +200,9 @@ defmodule Explorer.Chain.Cache.GasPriceOracle do
     exchange_rate_from_db = Market.get_coin_exchange_rate()
 
     %{
-      slow: %{
-        price: slow_fee |> format_wei(),
-        time: slow_time && slow_time |> Decimal.to_float(),
-        fiat_price: fiat_fee(slow_fee, exchange_rate_from_db)
-      },
-      average: %{
-        price: average_fee |> format_wei(),
-        time: average_time && average_time |> Decimal.to_float(),
-        fiat_price: fiat_fee(average_fee, exchange_rate_from_db)
-      },
-      fast: %{
-        price: fast_fee |> format_wei(),
-        time: fast_time && fast_time |> Decimal.to_float(),
-        fiat_price: fiat_fee(fast_fee, exchange_rate_from_db)
-      }
+      slow: compose_gas_price(slow_fee, slow_time, exchange_rate_from_db),
+      average: compose_gas_price(average_fee, average_time, exchange_rate_from_db),
+      fast: compose_gas_price(fast_fee, fast_time, exchange_rate_from_db)
     }
   end
 
@@ -237,6 +226,14 @@ defmodule Explorer.Chain.Cache.GasPriceOracle do
         count = Enum.count(value)
         {key, value |> Enum.reduce(Decimal.new(0), &Decimal.add/2) |> Decimal.div(count)}
     end)
+  end
+
+  defp compose_gas_price(fee, time, exchange_rate_from_db) do
+    %{
+      price: fee |> format_wei(),
+      time: time && time |> Decimal.to_float(),
+      fiat_price: fiat_fee(fee, exchange_rate_from_db)
+    }
   end
 
   defp fiat_fee(fee, exchange_rate) do

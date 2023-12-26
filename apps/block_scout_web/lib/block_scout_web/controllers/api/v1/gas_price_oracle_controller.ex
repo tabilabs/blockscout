@@ -31,7 +31,7 @@ defmodule BlockScoutWeb.API.V1.GasPriceOracleController do
   end
 
   def result(gas_prices) do
-    gas_prices
+    %{slow: gas_prices[:slow][:price], average: gas_prices[:average][:price], fast: gas_prices[:fast][:price]}
     |> Jason.encode!()
   end
 

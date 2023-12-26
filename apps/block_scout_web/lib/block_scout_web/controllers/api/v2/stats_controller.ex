@@ -43,12 +43,13 @@ defmodule BlockScoutWeb.API.V2.StatsController do
     coin_price_change =
       case Market.fetch_recent_history() do
         [today, yesterday | _] ->
-          today.closing_price
-          |> Decimal.div(yesterday.closing_price)
-          |> Decimal.sub(1)
-          |> Decimal.mult(100)
-          |> Decimal.to_float()
-          |> Float.ceil(2)
+          today.closing_price && yesterday.closing_price &&
+            today.closing_price
+            |> Decimal.div(yesterday.closing_price)
+            |> Decimal.sub(1)
+            |> Decimal.mult(100)
+            |> Decimal.to_float()
+            |> Float.ceil(2)
 
         _ ->
           nil
