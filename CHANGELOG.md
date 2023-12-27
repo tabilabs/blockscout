@@ -4,6 +4,8 @@
 
 ### Features
 
+- [#9068](https://github.com/blockscout/blockscout/pull/9068) - New RPC API endpoints
+
 ### Fixes
 
 - [#9062](https://github.com/blockscout/blockscout/pull/9062) - Fix blockscout-ens integration
