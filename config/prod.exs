@@ -20,7 +20,3 @@ config :logger, :account,
   path: Path.absname("logs/prod/account.log"),
   rotate: %{max_bytes: 52_428_800, keep: 19},
   metadata_filter: [fetcher: :account]
-
-config :block_scout,
-  block_fetch_interval_ms: 10000,
-  scheduler_interval_ms: 5000
